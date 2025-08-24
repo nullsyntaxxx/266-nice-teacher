@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="az">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>266 Ən Zor müəllim/müəllimə</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto+Slab:wght@100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #0f172a;
+            --fg: #e2e8f0;
+            --muted: #94a3b8;
+            --card: #111827;
+            --accent: #22c55e;
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            font-family: "Roboto Slab", serif;
+            background: linear-gradient(135deg, #0b1224, #0f172a 60%);
+            color: var(--fg);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px
+        }
+
+        .app {
+            width: min(980px, 100%);
+            background: rgba(17, 24, 39, .7);
+            border: 1px solid rgba(148, 163, 184, .15);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .35)
+        }
+
+        h1 {
+            margin: 0 0 10px;
+            font-size: clamp(22px, 3vw, 28px);
+            font-weight: 800;
+            letter-spacing: .2px
+        }
+
+        .sub {
+            color: var(--muted);
+            margin-bottom: 22px
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px
+        }
+
+        .progress {
+            font-weight: 600;
+            color: var(--muted)
+        }
+
+        .arena {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px
+        }
+
+        .card {
+            background: rgba(2, 6, 23, .7);
+            border: 1px solid rgba(148, 163, 184, .15);
+            border-radius: 18px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, .35);
+            border-color: rgba(148, 163, 184, .35)
+        }
+
+        .imgwrap {
+            aspect-ratio: 1/1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #0b1224
+        }
+
+        .imgwrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover
+        }
+
+        .meta {
+            padding: 12px 14px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between
+        }
+
+        .name {
+            font-weight: 700
+        }
+
+        .badge {
+            font-size: 12px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: rgba(148, 163, 184, .15);
+            color: var(--muted);
+            border: 1px solid rgba(148, 163, 184, .2)
+        }
+
+        .vs {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 6px 0 12px;
+            font-weight: 800;
+            opacity: .8;
+            letter-spacing: .8px
+        }
+
+        .result {
+            display: none;
+            text-align: center;
+            padding: 20px
+        }
+
+        .result img {
+            width: min(260px, 70%);
+            aspect-ratio: 1/1;
+            object-fit: cover;
+            border-radius: 18px;
+            border: 1px solid rgba(148, 163, 184, .25);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, .4);
+            margin: 14px auto
+        }
+
+        .btns {
+            margin-top: 16px;
+            display: flex;
+            gap: 10px;
+            justify-content: center
+        }
+
+        button {
+            cursor: pointer;
+            border: none;
+            border-radius: 999px;
+            padding: 10px 16px;
+            font-weight: 700
+        }
+
+        .primary {
+            background: var(--accent);
+            color: #062311
+        }
+
+        .ghost {
+            background: transparent;
+            color: var(--fg);
+            border: 1px solid rgba(148, 163, 184, .25)
+        }
+
+        @media (max-width:720px) {
+            .arena {
+                grid-template-columns: 1fr
+            }
+
+            .vs {
+                order: -1
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app">
+        <h1>266 Ən zor müəllim/müəllimə seçimi</h1>
+        <div class="sub">İki canavardan birini seç, sondaki sənin canavarın olsun!</div>
+
+        <div class="topbar">
+            <div class="progress" id="progress">Qarşılaşma: 0/0</div>
+            <div class="badge">Seçmə Haqqı</div>
+        </div>
+
+        <div class="arena">
+            <!-- Sol (hazırkı qalib) -->
+            <div class="card" id="leftCard">
+                <div class="imgwrap"><img id="leftImg" alt=""></div>
+                <div class="meta">
+                    <div class="name" id="leftName"></div>
+                    <div class="badge">Qalib</div>
+                </div>
+            </div>
+
+            <!-- Sağ (indiki rəqib) -->
+            <div class="card" id="rightCard">
+                <div class="imgwrap"><img id="rightImg" alt=""></div>
+                <div class="meta">
+                    <div class="name" id="rightName"></div>
+                    <div class="badge">Rəqib</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="vs">— canavarını seç —</div>
+
+        <div class="result" id="resultBox">
+            <h2>Sənin favori müəllimin</h2>
+            <img id="favImg" alt="">
+            <div style="font-size:22px;font-weight:900;margin-top:8px" id="favName"></div>
+            <div class="btns">
+                <button class="primary" id="restartBtn">Yenidən başla</button>
+                <button class="ghost" id="shuffleBtn">Yenidən qarışdır</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ====== Verilən siyahı ======
+        const TEACHERS = [
+            { name: 'İradə müəllimə', img: './images/1.jpg' },
+            { name: 'Asəf müəllim', img: './images/2.jpg' },
+            { name: 'Həsən müəllim', img: './images/3.jpg' },
+            { name: 'Vüqar müəllim', img: './images/4.jpg' },
+            { name: 'Arifə müəllimə', img: './images/5.jpg' },
+            { name: 'Azadə müəllimə', img: './images/6.jpg' },
+            { name: 'Canpolat Mujik', img: './images/7.jpg' },
+            { name: 'Aygün müəllimə', img: './images/8.jpg' }
+        ];
+
+        // ====== Yardımçı funksiyalar ======
+        const $ = (sel) => document.querySelector(sel);
+
+        function shuffle(arr) {
+            const a = [...arr];
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+        }
+
+        // ====== Oyun vəziyyəti ======
+        let order = [];          // qarışdırılmış sıra
+        let champion = null;     // hazırkı qalib (sol)
+        let index = 0;           // növbəti rəqibin indeksi (sağ)
+        let totalDuels = 0;      // ümumi duel sayı (n-1)
+        let finished = false;
+
+        function preloadImages(list) {
+            list.forEach(t => { const img = new Image(); img.src = t.img; });
+        }
+
+        function init(shuffleFirst = true) {
+            finished = false;
+            order = shuffleFirst ? shuffle(TEACHERS) : [...TEACHERS];
+            preloadImages(order);
+
+            champion = order[0]; // birincini qalib kimi götürürük
+            index = 1;           // ikinci rəqibdən başlayırıq
+            totalDuels = Math.max(order.length - 1, 0);
+
+            updateUI();
+            showArena(true);
+            showResult(false);
+        }
+
+        function updateUI() {
+            // Sol: champion
+            $('#leftImg').src = champion?.img || '';
+            $('#leftName').textContent = champion?.name || '';
+
+            // Sağ: cari rəqib (əgər qalıbsa)
+            const opponent = order[index];
+            $('#rightImg').src = opponent ? opponent.img : '';
+            $('#rightName').textContent = opponent ? opponent.name : (totalDuels === 0 ? '—' : 'Bitdi');
+
+            // Proqress
+            const played = Math.min(index, totalDuels);
+            $('#progress').textContent = `Qarşılaşma: ${played}/${totalDuels}`;
+        }
+
+        function pick(side) {
+            if (finished) return;
+
+            const opponent = order[index];
+            if (!opponent) {
+                // artıq rəqib yoxdur
+                endGame();
+                return;
+            }
+
+            // Seçim: sol qalib seçilərsə champion eyni qalır; sağ seçilərsə champion rəqiblə əvəzlənir
+            if (side === 'right') champion = opponent;
+
+            // Növbəti rəqibə keçək
+            index++;
+
+            if (index >= order.length) {
+                // bütün rəqiblərlə qarşılaşıb → bitir
+                endGame();
+            } else {
+                // UI yenilə
+                updateUI();
+                // kiçik klik animasiyası
+                flash(side === 'left' ? '#leftCard' : '#rightCard');
+            }
+        }
+
+        function flash(sel) {
+            const el = $(sel);
+            el.style.transform = 'translateY(-4px) scale(1.02)';
+            el.style.boxShadow = '0 18px 32px rgba(0,0,0,.45)';
+            setTimeout(() => {
+                el.style.transform = '';
+                el.style.boxShadow = '';
+            }, 140);
+        }
+
+        function endGame() {
+            finished = true;
+            $('#favImg').src = champion.img;
+            $('#favName').textContent = champion.name;
+            showArena(false);
+            showResult(true);
+            $('#progress').textContent = `Qarşılaşma: ${totalDuels}/${totalDuels}`;
+        }
+
+        function showArena(show) {
+            $('.arena').style.display = show ? 'grid' : 'none';
+            $('.vs').style.display = show ? 'flex' : 'none';
+        }
+        function showResult(show) {
+            $('#resultBox').style.display = show ? 'block' : 'none';
+        }
+
+        // Kliklər
+        $('#leftCard').addEventListener('click', () => pick('left'));
+        $('#rightCard').addEventListener('click', () => pick('right'));
+        $('#restartBtn').addEventListener('click', () => init(false)); // eyni sıra ilə yenidən
+        $('#shuffleBtn').addEventListener('click', () => init(true));  // yenidən qarışdır
+
+        // Başlat
+        init(true);
+    </script>
+</body>
+
+</html>
